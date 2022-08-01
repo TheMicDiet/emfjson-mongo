@@ -1,13 +1,18 @@
 package org.emfjson.mongo.tests;
 
-import com.mongodb.MongoClient;
+
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.emfjson.jackson.resource.JsonResourceFactory;
+import org.eclipse.emfcloud.jackson.resource.JsonResourceFactory;
+
+
 import org.emfjson.mongo.MongoHandler;
 import org.junit.After;
 import org.junit.Before;
@@ -26,12 +31,17 @@ public class DynamicTest {
 	private MongoClient client;
 
 	private Map<String, Object> options = new HashMap<>();
-	private URI testURI1 = URI.createURI("mongodb://localhost:27017/emfjson-test/models/foo");
-	private URI testURI2 = URI.createURI("mongodb://localhost:27017/emfjson-test/models/foo-model");
+	private URI testURI1 = URI.createURI("mongodb://localhost:27018/emfjson-test/models/foo");
+	private URI testURI2 = URI.createURI("mongodb://localhost:27018/emfjson-test/models/foo-model");
+
+	{
+		//options.put(EMFJs.OPTION_REF_FIELD, "_ref");
+		// module.setReferenceInfo(new EcoreReferenceInfo.Base("_ref", "_type"));
+	}
 
 	@Before
 	public void setUp() throws IOException {
-		client = new MongoClient();
+		client = MongoClients.create("mongodb://localhost:27018");
 
 		MongoHandler handler = new MongoHandler(client);
 		resourceSet = new ResourceSetImpl();

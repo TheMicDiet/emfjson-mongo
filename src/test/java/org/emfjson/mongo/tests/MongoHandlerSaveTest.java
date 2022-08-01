@@ -1,7 +1,8 @@
 package org.emfjson.mongo.tests;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.MongoClient;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 import org.eclipse.emf.common.util.URI;
@@ -12,7 +13,7 @@ import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.emfjson.jackson.resource.JsonResourceFactory;
+import org.eclipse.emfcloud.jackson.resource.JsonResourceFactory;
 import org.emfjson.mongo.MongoHandler;
 import org.junit.After;
 import org.junit.Before;
@@ -28,11 +29,11 @@ public class MongoHandlerSaveTest {
 	private ResourceSet resourceSet;
 	private MongoClient client;
 	private MongoHandler handler;
-	private URI testURI = URI.createURI("mongodb://localhost:27017/emfjson-test/models/model1");
+	private URI testURI = URI.createURI("mongodb://localhost:27018/emfjson-test/models/model1");
 
 	@Before
 	public void setUp() {
-		client = new MongoClient();
+		client = MongoClients.create("mongodb://localhost:27018");
 		handler = new MongoHandler(client);
 		resourceSet = new ResourceSetImpl();
 
@@ -66,7 +67,7 @@ public class MongoHandlerSaveTest {
 	public void testSaveWithUriMapping() throws IOException {
 		resourceSet.getURIConverter().getURIMap().put(
 				URI.createURI("http://resources/"),
-				URI.createURI("mongodb://localhost:27017/emfjson-test/models/"));
+				URI.createURI("mongodb://localhost:27018/emfjson-test/models/"));
 
 		Resource resource = resourceSet.createResource(URI.createURI("http://resources/model1"));
 

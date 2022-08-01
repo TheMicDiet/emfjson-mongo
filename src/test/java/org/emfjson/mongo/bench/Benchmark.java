@@ -1,16 +1,19 @@
 package org.emfjson.mongo.bench;
 
-import com.mongodb.MongoClient;
+
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.emfjson.jackson.resource.JsonResourceFactory;
+import org.eclipse.emfcloud.jackson.resource.JsonResourceFactory;
 import org.emfjson.model.ModelFactory;
 import org.emfjson.model.TestA;
 import org.emfjson.model.TestB;
 import org.emfjson.mongo.MongoHandler;
+
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,7 +23,7 @@ import java.util.Map;
 
 public class Benchmark {
 
-	static URI mongoURI = URI.createURI("mongodb://localhost:27017/emfjson-test/bench");
+	static URI mongoURI = URI.createURI("mongodb://localhost:27018/emfjson-test/bench");
 	static long times = 20;
 
 	static List<EObject> createModel() {
@@ -56,8 +59,9 @@ public class Benchmark {
 	public static void main(String[] args) {
 		long sum = 0;
 		Map<String, Object> options = new HashMap<>();
+		//options.put(EMFJs.OPTION_INDENT_OUTPUT, false);
 
-		final MongoClient client = new MongoClient();
+		final MongoClient client = MongoClients.create("mongodb://localhost:27018");
 
 		for (int i = 0; i < times; i++) {
 			ResourceSet resourceSet = new ResourceSetImpl();

@@ -1,6 +1,7 @@
 package org.emfjson.mongo;
 
-import com.mongodb.MongoClient;
+
+import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 import org.eclipse.emf.common.util.URI;

@@ -1,7 +1,8 @@
 package org.emfjson.mongo.tests;
 
-import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 import org.eclipse.emf.common.util.URI;
@@ -13,9 +14,9 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.emfjson.jackson.module.EMFModule;
-import org.emfjson.jackson.resource.JsonResource;
-import org.emfjson.jackson.resource.JsonResourceFactory;
+import org.eclipse.emfcloud.jackson.module.EMFModule;
+import org.eclipse.emfcloud.jackson.resource.JsonResource;
+import org.eclipse.emfcloud.jackson.resource.JsonResourceFactory;
 import org.emfjson.mongo.MongoHandler;
 import org.junit.After;
 import org.junit.Before;
@@ -36,7 +37,7 @@ public class UseIdTest {
 
 	@Before
 	public void setUp() {
-		client = new MongoClient();
+		client = MongoClients.create("mongodb://localhost:27018");
 		handler = new MongoHandler(client);
 		resourceSet = new ResourceSetImpl();
 
@@ -62,14 +63,14 @@ public class UseIdTest {
 
 	private Map<?, ?> getOptions() {
 		Map<String, Object> options = new HashMap<>();
-		options.put(EMFModule.Feature.OPTION_USE_ID.name(), true);
+		options.put(EMFModule.Feature.OPTION_USE_ID.toString(), true);
 		return options;
 	}
 
 	@Test
 	public void testSave() throws IOException {
 		Resource resource = resourceSet.createResource(
-				URI.createURI("mongodb://localhost:27017/emfjson-test/models/model-test-uuid-1"));
+				URI.createURI("mongodb://localhost:27018/emfjson-test/models/model-test-uuid-1"));
 
 		EPackage p = EcoreFactory.eINSTANCE.createEPackage();
 		p.setName("p");
@@ -93,7 +94,7 @@ public class UseIdTest {
 
 		Document contents = (Document) document.get("contents");
 		assertNotNull(contents);
-
+		
 		assertTrue(contents.containsKey("_id"));
 		assertEquals(pId, contents.get("_id"));
 
